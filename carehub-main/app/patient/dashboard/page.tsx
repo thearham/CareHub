@@ -30,7 +30,7 @@ export default function PatientDashboard() {
   const [otp, setOtp] = useState<string | null>(null);
   const [otpExpires, setOtpExpires] = useState<string | null>(null);
   const otpMutation = useMutation({
-    mutationFn: () => accountsService.generateOTP({ patient_phone: user?.phone_number }),
+    mutationFn: () => accountsService.generateOTP({ patient_phone: user?.phone_number || '' }),
     onSuccess: (data) => {
       setOtp(data.otp);
       setOtpExpires(data.expires_at);
@@ -114,8 +114,8 @@ export default function PatientDashboard() {
             {reports.slice(0, 5).map((report) => (
               <div key={report.id} className="flex justify-between items-center py-3 border-b border-[#e8ecef] last:border-0">
                 <div>
-                  <span className="text-[#2c3e50] font-medium">{report.report_type}</span>
-                  {report.notes && <p className="text-sm text-[#5a6c7d] mt-1">{report.notes}</p>}
+                  <span className="text-[#2c3e50] font-medium">{report.title}</span>
+                  {report.description && <p className="text-sm text-[#5a6c7d] mt-1">{report.description}</p>}
                 </div>
                 <span className="text-sm text-[#a8b7c7]">
                   {new Date(report.uploaded_at).toLocaleDateString()}

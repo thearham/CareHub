@@ -58,6 +58,7 @@ export interface OTPGenerateRequest {
 // OTP Generate Response - matches OTPGenerateResponseSerializer
 export interface OTPGenerateResponse {
   message: string;
+  otp: string;
   expires_at: string;
   phone_number: string; // Last 4 digits
 }
