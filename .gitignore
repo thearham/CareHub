@@ -1,0 +1,49 @@
+# Dependencies
+node_modules/
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+
+# Build outputs
+.next/
+build/
+dist/
+*.egg-info/
+
+# Environment files
+.env
+.env.local
+.env*.local
+
+# IDE
+.claude/
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs
+logs/
+*.log
+
+# Database
+db.sqlite3
+db.sqlite3-journal
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+coverage/
+
+# Media files (uploaded by users)
+media/
+
+# Misc
+*.pem
+.vercel

@@ -1,0 +1,3437 @@
+openapi: 3.0.3
+info:
+  title: CareHub API
+  version: 1.0.0
+  description: Multi-tenant healthcare dashboard API
+paths:
+  /api/accounts/change-password/:
+    post:
+      operationId: api_accounts_change_password_create
+      description: |-
+        Change password for authenticated user.
+        POST /api/accounts/change-password/
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChangePasswordRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ChangePasswordRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ChangePasswordRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChangePasswordResponse'
+          description: ''
+  /api/accounts/dashboard-stats/:
+    get:
+      operationId: api_accounts_dashboard_stats_retrieve
+      description: |-
+        Get dashboard statistics (Admin only).
+        GET /api/accounts/dashboard-stats/
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DashboardStats'
+          description: ''
+  /api/accounts/me/:
+    get:
+      operationId: api_accounts_me_retrieve
+      description: |-
+        Get or update current authenticated user.
+        GET/PUT/PATCH /api/accounts/me/
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
+    put:
+      operationId: api_accounts_me_update
+      description: |-
+        Get or update current authenticated user.
+        GET/PUT/PATCH /api/accounts/me/
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/UserRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UserRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
+    patch:
+      operationId: api_accounts_me_partial_update
+      description: |-
+        Get or update current authenticated user.
+        GET/PUT/PATCH /api/accounts/me/
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedUserRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedUserRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedUserRequest'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
+  /api/accounts/otp/generate/:
+    post:
+      operationId: api_accounts_otp_generate_create
+      description: |-
+        Generate OTP for patient repository access.
+        POST /api/accounts/otp/generate/
+
+        Rate limited: 3 requests per 15 minutes per IP
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OTPGenerateRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/OTPGenerateRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/OTPGenerateRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OTPGenerateResponse'
+          description: ''
+  /api/accounts/otp/verify/:
+    post:
+      operationId: api_accounts_otp_verify_create
+      description: |-
+        Verify OTP and grant access to patient repository.
+        POST /api/accounts/otp/verify/
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OTPVerifyRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/OTPVerifyRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/OTPVerifyRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OTPVerifyResponse'
+          description: ''
+  /api/accounts/patients/register/:
+    post:
+      operationId: api_accounts_patients_register_create
+      description: |-
+        Patient self-registration endpoint.
+        POST /api/accounts/patients/register/
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatientRegistrationRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatientRegistrationRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatientRegistrationRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PatientRegistration'
+          description: ''
+  /api/accounts/users/:
+    get:
+      operationId: api_accounts_users_list
+      description: |-
+        List users (Admin only).
+        GET /api/accounts/users/
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedUserList'
+          description: ''
+  /api/appointments/:
+    post:
+      operationId: api_appointments_create
+      description: |-
+        Create appointment (Patient only).
+        POST /api/appointments/
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateAppointmentRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CreateAppointmentRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CreateAppointmentRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateAppointment'
+          description: ''
+  /api/appointments/{id}/:
+    get:
+      operationId: api_appointments_retrieve
+      description: |-
+        Get appointment details.
+        GET /api/appointments/{id}/
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Appointment'
+          description: ''
+  /api/appointments/{id}/assign-doctor/:
+    post:
+      operationId: api_appointments_assign_doctor_create
+      description: |-
+        Assign doctor to appointment (Hospital only).
+        POST /api/appointments/{id}/assign-doctor/
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AssignDoctorRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/AssignDoctorRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/AssignDoctorRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppointmentResponse'
+          description: ''
+  /api/appointments/{id}/cancel/:
+    post:
+      operationId: api_appointments_cancel_create
+      description: |-
+        Cancel appointment (Patient or Hospital).
+        POST /api/appointments/{id}/cancel/
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppointmentResponse'
+          description: ''
+  /api/appointments/{id}/status/:
+    patch:
+      operationId: api_appointments_status_partial_update
+      description: |-
+        Update appointment status.
+        PATCH /api/appointments/{id}/status/
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedUpdateAppointmentStatusRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedUpdateAppointmentStatusRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedUpdateAppointmentStatusRequest'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppointmentResponse'
+          description: ''
+  /api/appointments/doctor-appointments/:
+    get:
+      operationId: api_appointments_doctor_appointments_list
+      description: |-
+        List doctor's assigned appointments.
+        GET /api/appointments/doctor-appointments/
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedDoctorAppointmentList'
+          description: ''
+  /api/appointments/hospital-appointments/:
+    get:
+      operationId: api_appointments_hospital_appointments_list
+      description: |-
+        List hospital's appointments.
+        GET /api/appointments/hospital-appointments/
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedAppointmentList'
+          description: ''
+  /api/appointments/my-appointments/:
+    get:
+      operationId: api_appointments_my_appointments_list
+      description: |-
+        List patient's appointments.
+        GET /api/appointments/my-appointments/
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedAppointmentList'
+          description: ''
+  /api/hospitals/:
+    get:
+      operationId: api_hospitals_list
+      description: |-
+        List hospitals (Admin can see all, others see only approved).
+        GET /api/hospitals/
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedHospitalList'
+          description: ''
+  /api/hospitals/{id}/:
+    get:
+      operationId: api_hospitals_retrieve
+      description: |-
+        Get or update hospital details.
+        GET/PUT/PATCH /api/hospitals/{id}/
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Hospital'
+          description: ''
+    put:
+      operationId: api_hospitals_update
+      description: |-
+        Get or update hospital details.
+        GET/PUT/PATCH /api/hospitals/{id}/
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HospitalRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/HospitalRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/HospitalRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Hospital'
+          description: ''
+    patch:
+      operationId: api_hospitals_partial_update
+      description: |-
+        Get or update hospital details.
+        GET/PUT/PATCH /api/hospitals/{id}/
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedHospitalRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedHospitalRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedHospitalRequest'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Hospital'
+          description: ''
+  /api/hospitals/{id}/approve/:
+    patch:
+      operationId: api_hospitals_approve_partial_update
+      description: |-
+        Approve or reject hospital (Admin only).
+        PATCH /api/hospitals/{id}/approve/
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedHospitalApprovalRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedHospitalApprovalRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedHospitalApprovalRequest'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HospitalApprovalResponse'
+          description: ''
+  /api/hospitals/departments/:
+    get:
+      operationId: api_hospitals_departments_list
+      description: |-
+        List or create departments.
+        GET/POST /api/hospitals/departments/
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedDepartmentList'
+          description: ''
+    post:
+      operationId: api_hospitals_departments_create
+      description: |-
+        List or create departments.
+        GET/POST /api/hospitals/departments/
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DepartmentRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/DepartmentRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/DepartmentRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Department'
+          description: ''
+  /api/hospitals/departments/{id}/:
+    get:
+      operationId: api_hospitals_departments_retrieve
+      description: |-
+        Get, update, or delete a department.
+        GET/PUT/PATCH/DELETE /api/hospitals/departments/{id}/
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Department'
+          description: ''
+    put:
+      operationId: api_hospitals_departments_update
+      description: |-
+        Get, update, or delete a department.
+        GET/PUT/PATCH/DELETE /api/hospitals/departments/{id}/
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DepartmentRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/DepartmentRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/DepartmentRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Department'
+          description: ''
+    patch:
+      operationId: api_hospitals_departments_partial_update
+      description: |-
+        Get, update, or delete a department.
+        GET/PUT/PATCH/DELETE /api/hospitals/departments/{id}/
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedDepartmentRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedDepartmentRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedDepartmentRequest'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Department'
+          description: ''
+    delete:
+      operationId: api_hospitals_departments_destroy
+      description: |-
+        Get, update, or delete a department.
+        GET/PUT/PATCH/DELETE /api/hospitals/departments/{id}/
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/hospitals/doctors/:
+    get:
+      operationId: api_hospitals_doctors_list
+      description: |-
+        List doctors for a hospital.
+        GET /api/hospitals/doctors/
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedHospitalDoctorProfileList'
+          description: ''
+  /api/hospitals/doctors/{id}/:
+    get:
+      operationId: api_hospitals_doctors_retrieve
+      description: |-
+        Get or update doctor profile.
+        GET/PUT/PATCH /api/hospitals/doctors/{id}/
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HospitalDoctorProfile'
+          description: ''
+    put:
+      operationId: api_hospitals_doctors_update
+      description: |-
+        Get or update doctor profile.
+        GET/PUT/PATCH /api/hospitals/doctors/{id}/
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HospitalDoctorProfileRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/HospitalDoctorProfileRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/HospitalDoctorProfileRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HospitalDoctorProfile'
+          description: ''
+    patch:
+      operationId: api_hospitals_doctors_partial_update
+      description: |-
+        Get or update doctor profile.
+        GET/PUT/PATCH /api/hospitals/doctors/{id}/
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedHospitalDoctorProfileRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedHospitalDoctorProfileRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedHospitalDoctorProfileRequest'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HospitalDoctorProfile'
+          description: ''
+  /api/hospitals/doctors/create/:
+    post:
+      operationId: api_hospitals_doctors_create_create
+      description: |-
+        Create a doctor account (Hospital only).
+        POST /api/hospitals/doctors/create/
+
+        Returns generated username and password.
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateDoctorRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CreateDoctorRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CreateDoctorRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateDoctorResponse'
+          description: ''
+  /api/hospitals/nearby/:
+    get:
+      operationId: api_hospitals_nearby_retrieve
+      description: |-
+        Find nearby hospitals based on coordinates.
+        GET /api/hospitals/nearby/?lat=&lng=&radius_km=
+      parameters:
+      - in: query
+        name: lat
+        schema:
+          type: number
+          format: float
+        required: true
+      - in: query
+        name: lng
+        schema:
+          type: number
+          format: float
+        required: true
+      - in: query
+        name: radius_km
+        schema:
+          type: number
+          format: float
+          default: 10
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NearbyHospitalsResponse'
+          description: ''
+  /api/hospitals/register/:
+    post:
+      operationId: api_hospitals_register_create
+      description: |-
+        Hospital registration endpoint.
+        POST /api/hospitals/register/
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HospitalRegistrationRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/HospitalRegistrationRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/HospitalRegistrationRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HospitalRegistration'
+          description: ''
+  /api/recommendations/:
+    post:
+      operationId: api_recommendations_create
+      description: |-
+        Get medicine recommendations using GROQ LLM.
+        POST /api/recommendations/
+
+        Rate limited: 10 requests per hour per user
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MedicineRecommendationRequestRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/MedicineRecommendationRequestRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/MedicineRecommendationRequestRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MedicineRecommendationResponse'
+          description: ''
+  /api/recommendations/{id}/:
+    get:
+      operationId: api_recommendations_retrieve
+      description: |-
+        Get specific medicine recommendation.
+        GET /api/recommendations/{id}/
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MedicineRecommendation'
+          description: ''
+  /api/recommendations/clear-cache/:
+    post:
+      operationId: api_recommendations_clear_cache_create
+      description: |-
+        Clear medicine recommendation cache (Admin only).
+        POST /api/recommendations/clear-cache/
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClearCacheResponse'
+          description: ''
+  /api/recommendations/history/:
+    get:
+      operationId: api_recommendations_history_list
+      description: |-
+        Get medicine recommendation history for current user.
+        GET /api/recommendations/history/
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedMedicineRecommendationList'
+          description: ''
+  /api/recommendations/stats/:
+    get:
+      operationId: api_recommendations_stats_retrieve
+      description: |-
+        Get recommendation statistics (Admin only).
+        GET /api/recommendations/stats/
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RecommendationStats'
+          description: ''
+  /api/records/my-reports/:
+    get:
+      operationId: api_records_my_reports_list
+      description: |-
+        List current user's reports (Patient only).
+        GET /api/records/my-reports/
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedPatientReportList'
+          description: ''
+  /api/records/patients/{patient_id}/prescriptions/:
+    get:
+      operationId: api_records_patients_prescriptions_list
+      description: |-
+        Get prescription history for a patient (with OTP verification for doctors).
+        GET /api/records/patients/{patient_id}/prescriptions/
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - in: path
+        name: patient_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedPrescriptionList'
+          description: ''
+  /api/records/patients/{patient_id}/reports/:
+    get:
+      operationId: api_records_patients_reports_list
+      description: |-
+        List patient reports (with OTP verification for doctors).
+        GET /api/records/patients/{patient_id}/reports/
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - in: path
+        name: patient_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedPatientReportList'
+          description: ''
+  /api/records/patients/{patient_id}/reports/upload/:
+    post:
+      operationId: api_records_patients_reports_upload_create
+      description: |-
+        Upload patient report.
+        POST /api/records/patients/{patient_id}/reports/
+      parameters:
+      - in: path
+        name: patient_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UploadPatientReportRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/UploadPatientReportRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UploadPatientReport'
+          description: ''
+  /api/records/patients/{patient_id}/summary/:
+    get:
+      operationId: api_records_patients_summary_retrieve
+      description: |-
+        Get medical summary for a patient (prescriptions + reports count).
+        GET /api/records/patients/{patient_id}/summary/
+      parameters:
+      - in: path
+        name: patient_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PatientMedicalSummary'
+          description: ''
+  /api/records/prescriptions/:
+    get:
+      operationId: api_records_prescriptions_list
+      description: |-
+        List prescriptions based on user type.
+        GET /api/records/prescriptions/
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedPrescriptionList'
+          description: ''
+  /api/records/prescriptions/{id}/:
+    get:
+      operationId: api_records_prescriptions_retrieve
+      description: |-
+        Get prescription details.
+        GET /api/records/prescriptions/{id}/
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PrescriptionWithAttachments'
+          description: ''
+  /api/records/prescriptions/{prescription_id}/attachments/:
+    post:
+      operationId: api_records_prescriptions_attachments_create
+      description: |-
+        Add attachment to prescription (Doctor only).
+        POST /api/records/prescriptions/{prescription_id}/attachments/
+      parameters:
+      - in: path
+        name: prescription_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PrescriptionAttachmentRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PrescriptionAttachmentRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PrescriptionAttachment'
+          description: ''
+  /api/records/prescriptions/create/:
+    post:
+      operationId: api_records_prescriptions_create_create
+      description: |-
+        Create prescription (Doctor only).
+        POST /api/records/prescriptions/
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreatePrescriptionRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CreatePrescriptionRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CreatePrescriptionRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreatePrescription'
+          description: ''
+  /api/records/reports/{id}/:
+    get:
+      operationId: api_records_reports_retrieve
+      description: |-
+        Get or delete patient report.
+        GET/DELETE /api/records/reports/{id}/
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PatientReport'
+          description: ''
+    delete:
+      operationId: api_records_reports_destroy
+      description: |-
+        Get or delete patient report.
+        GET/DELETE /api/records/reports/{id}/
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/token/:
+    post:
+      operationId: api_token_create
+      description: |-
+        Takes a set of user credentials and returns an access and refresh JSON web
+        token pair to prove the authentication of those credentials.
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenObtainPairRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TokenObtainPairRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TokenObtainPairRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenObtainPair'
+          description: ''
+  /api/token/refresh/:
+    post:
+      operationId: api_token_refresh_create
+      description: |-
+        Takes a refresh type JSON web token and returns an access type JSON web
+        token if the refresh token is valid.
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenRefreshRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TokenRefreshRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TokenRefreshRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenRefresh'
+          description: ''
+components:
+  schemas:
+    Appointment:
+      type: object
+      description: Serializer for Appointment model.
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        patient:
+          type: integer
+        patient_name:
+          type: string
+          readOnly: true
+        patient_phone:
+          type: string
+          readOnly: true
+        hospital:
+          type: integer
+        hospital_name:
+          type: string
+          readOnly: true
+        department:
+          type: integer
+        department_name:
+          type: string
+          readOnly: true
+        assigned_doctor:
+          type: integer
+          nullable: true
+          description: Doctor assigned by hospital
+        doctor_name:
+          type: string
+          readOnly: true
+        requested_time:
+          type: string
+          format: date-time
+          description: Patient requested appointment time
+        confirmed_time:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+          description: Hospital confirmed time
+        status:
+          $ref: '#/components/schemas/StatusA66Enum'
+        reason:
+          type: string
+          description: Reason for appointment
+        notes:
+          type: string
+          description: Additional notes from hospital/doctor
+        assigned_by:
+          type: integer
+          readOnly: true
+          nullable: true
+          description: Hospital user who assigned the doctor
+        assigned_by_name:
+          type: string
+          readOnly: true
+        assigned_at:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - assigned_at
+      - assigned_by
+      - assigned_by_name
+      - confirmed_time
+      - created_at
+      - department
+      - department_name
+      - doctor_name
+      - hospital
+      - hospital_name
+      - id
+      - patient
+      - patient_name
+      - patient_phone
+      - requested_time
+      - updated_at
+    AppointmentResponse:
+      type: object
+      description: Response serializer for appointment actions.
+      properties:
+        message:
+          type: string
+        appointment:
+          $ref: '#/components/schemas/Appointment'
+      required:
+      - appointment
+      - message
+    AssignDoctorRequest:
+      type: object
+      description: Serializer for assigning doctor to appointment.
+      properties:
+        doctor_id:
+          type: integer
+        confirmed_time:
+          type: string
+          format: date-time
+          nullable: true
+        notes:
+          type: string
+      required:
+      - doctor_id
+    ChangePasswordRequest:
+      type: object
+      description: Serializer for password change.
+      properties:
+        old_password:
+          type: string
+          writeOnly: true
+          minLength: 1
+        new_password:
+          type: string
+          writeOnly: true
+          minLength: 1
+        new_password_confirm:
+          type: string
+          writeOnly: true
+          minLength: 1
+      required:
+      - new_password
+      - new_password_confirm
+      - old_password
+    ChangePasswordResponse:
+      type: object
+      description: Response serializer for password change.
+      properties:
+        message:
+          type: string
+      required:
+      - message
+    ClearCacheResponse:
+      type: object
+      description: Response serializer for cache clearing.
+      properties:
+        message:
+          type: string
+      required:
+      - message
+    CreateAppointment:
+      type: object
+      description: Serializer for creating appointments (Patient).
+      properties:
+        hospital:
+          type: integer
+        department:
+          type: integer
+        requested_time:
+          type: string
+          format: date-time
+          description: Patient requested appointment time
+        reason:
+          type: string
+          description: Reason for appointment
+      required:
+      - department
+      - hospital
+      - requested_time
+    CreateAppointmentRequest:
+      type: object
+      description: Serializer for creating appointments (Patient).
+      properties:
+        hospital:
+          type: integer
+        department:
+          type: integer
+        requested_time:
+          type: string
+          format: date-time
+          description: Patient requested appointment time
+        reason:
+          type: string
+          description: Reason for appointment
+      required:
+      - department
+      - hospital
+      - requested_time
+    CreateDoctorRequest:
+      type: object
+      description: |-
+        Serializer for creating a doctor account by hospital.
+        Returns generated username and password.
+      properties:
+        first_name:
+          type: string
+          minLength: 1
+          maxLength: 150
+        last_name:
+          type: string
+          minLength: 1
+          maxLength: 150
+        email:
+          type: string
+          format: email
+          minLength: 1
+        phone_number:
+          type: string
+          minLength: 1
+          maxLength: 17
+        cnic:
+          type: string
+          maxLength: 20
+        address:
+          type: string
+        license_number:
+          type: string
+          minLength: 1
+          maxLength: 100
+        specialization:
+          type: string
+          minLength: 1
+          maxLength: 255
+        available_timings: {}
+      required:
+      - email
+      - first_name
+      - last_name
+      - license_number
+      - phone_number
+      - specialization
+    CreateDoctorResponse:
+      type: object
+      description: Response serializer for doctor creation.
+      properties:
+        message:
+          type: string
+        doctor:
+          $ref: '#/components/schemas/HospitalDoctorProfile'
+        credentials:
+          type: object
+          additionalProperties: {}
+      required:
+      - credentials
+      - doctor
+      - message
+    CreatePrescription:
+      type: object
+      description: Serializer for creating prescriptions (Doctor).
+      properties:
+        appointment:
+          type: integer
+          nullable: true
+          description: Related appointment if applicable
+        patient:
+          type: integer
+        diagnosis:
+          type: string
+          description: Diagnosis details
+        investigations:
+          type: string
+          description: Recommended investigations/tests
+        treatment_plan:
+          type: string
+          description: Treatment plan and recommendations
+        medicines:
+          description: List of medicines with dosage, frequency, duration
+        follow_up_date:
+          type: string
+          format: date
+          nullable: true
+          description: Recommended follow-up date
+        referral_notes:
+          type: string
+          description: Referral to specialist if needed
+        doctor_notes:
+          type: string
+          description: Additional notes from doctor
+      required:
+      - diagnosis
+      - patient
+    CreatePrescriptionRequest:
+      type: object
+      description: Serializer for creating prescriptions (Doctor).
+      properties:
+        appointment:
+          type: integer
+          nullable: true
+          description: Related appointment if applicable
+        patient:
+          type: integer
+        diagnosis:
+          type: string
+          minLength: 1
+          description: Diagnosis details
+        investigations:
+          type: string
+          description: Recommended investigations/tests
+        treatment_plan:
+          type: string
+          description: Treatment plan and recommendations
+        medicines:
+          description: List of medicines with dosage, frequency, duration
+        follow_up_date:
+          type: string
+          format: date
+          nullable: true
+          description: Recommended follow-up date
+        referral_notes:
+          type: string
+          description: Referral to specialist if needed
+        doctor_notes:
+          type: string
+          description: Additional notes from doctor
+      required:
+      - diagnosis
+      - patient
+    DashboardStats:
+      type: object
+      description: Response serializer for dashboard statistics.
+      properties:
+        total_users:
+          type: integer
+        total_patients:
+          type: integer
+        total_doctors:
+          type: integer
+        total_hospitals:
+          type: integer
+        approved_hospitals:
+          type: integer
+        pending_hospitals:
+          type: integer
+        total_appointments:
+          type: integer
+        pending_appointments:
+          type: integer
+      required:
+      - approved_hospitals
+      - pending_appointments
+      - pending_hospitals
+      - total_appointments
+      - total_doctors
+      - total_hospitals
+      - total_patients
+      - total_users
+    Department:
+      type: object
+      description: Serializer for Department model.
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        hospital:
+          type: integer
+        hospital_name:
+          type: string
+          readOnly: true
+        name:
+          type: string
+          maxLength: 255
+        description:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - created_at
+      - hospital
+      - hospital_name
+      - id
+      - name
+      - updated_at
+    DepartmentRequest:
+      type: object
+      description: Serializer for Department model.
+      properties:
+        hospital:
+          type: integer
+        name:
+          type: string
+          minLength: 1
+          maxLength: 255
+        description:
+          type: string
+      required:
+      - hospital
+      - name
+    DoctorAppointment:
+      type: object
+      description: Serializer for doctor's view of appointments.
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        patient:
+          type: integer
+          readOnly: true
+        patient_name:
+          type: string
+          readOnly: true
+        patient_phone:
+          type: string
+          readOnly: true
+        patient_email:
+          type: string
+          readOnly: true
+        hospital_name:
+          type: string
+          readOnly: true
+        department_name:
+          type: string
+          readOnly: true
+        requested_time:
+          type: string
+          format: date-time
+          readOnly: true
+          description: Patient requested appointment time
+        confirmed_time:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+          description: Hospital confirmed time
+        status:
+          allOf:
+          - $ref: '#/components/schemas/StatusA66Enum'
+          readOnly: true
+        reason:
+          type: string
+          readOnly: true
+          description: Reason for appointment
+        notes:
+          type: string
+          readOnly: true
+          description: Additional notes from hospital/doctor
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - confirmed_time
+      - created_at
+      - department_name
+      - hospital_name
+      - id
+      - notes
+      - patient
+      - patient_email
+      - patient_name
+      - patient_phone
+      - reason
+      - requested_time
+      - status
+    FileTypeEnum:
+      enum:
+      - LAB
+      - PRESCRIPTION
+      - XRAY
+      - MRI
+      - CT
+      - ULTRASOUND
+      - OTHER
+      type: string
+      description: |-
+        * `LAB` - Lab Report
+        * `PRESCRIPTION` - Prescription
+        * `XRAY` - X-Ray
+        * `MRI` - MRI Scan
+        * `CT` - CT Scan
+        * `ULTRASOUND` - Ultrasound
+        * `OTHER` - Other
+    Hospital:
+      type: object
+      description: Serializer for Hospital model.
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        user:
+          type: integer
+        user_username:
+          type: string
+          readOnly: true
+        user_email:
+          type: string
+          readOnly: true
+        name:
+          type: string
+          maxLength: 255
+        license_number:
+          type: string
+          maxLength: 100
+        email:
+          type: string
+          format: email
+          maxLength: 254
+        phone:
+          type: string
+          maxLength: 17
+        address:
+          type: string
+        location:
+          type: string
+          description: Detailed location/area description
+        latitude:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,3}(?:\.\d{0,6})?$
+          nullable: true
+        longitude:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,3}(?:\.\d{0,6})?$
+          nullable: true
+        is_approved:
+          type: boolean
+          readOnly: true
+        approved_by:
+          type: integer
+          readOnly: true
+          nullable: true
+        approved_at:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - address
+      - approved_at
+      - approved_by
+      - created_at
+      - email
+      - id
+      - is_approved
+      - license_number
+      - location
+      - name
+      - phone
+      - updated_at
+      - user
+      - user_email
+      - user_username
+    HospitalApprovalResponse:
+      type: object
+      description: Response serializer for hospital approval.
+      properties:
+        message:
+          type: string
+        hospital:
+          $ref: '#/components/schemas/Hospital'
+      required:
+      - hospital
+      - message
+    HospitalDoctorProfile:
+      type: object
+      description: Serializer for HospitalDoctorProfile model.
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        hospital:
+          type: integer
+        hospital_name:
+          type: string
+          readOnly: true
+        user:
+          type: integer
+          readOnly: true
+        doctor_name:
+          type: string
+          readOnly: true
+        doctor_username:
+          type: string
+          readOnly: true
+        doctor_email:
+          type: string
+          readOnly: true
+        cnic:
+          type: string
+          maxLength: 20
+        address:
+          type: string
+        license_number:
+          type: string
+          maxLength: 100
+        specialization:
+          type: string
+          maxLength: 255
+        phone_number:
+          type: string
+          maxLength: 17
+        available_timings:
+          description: 'JSON object with day: [time_slots] mapping'
+        is_active:
+          type: boolean
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - created_at
+      - doctor_email
+      - doctor_name
+      - doctor_username
+      - hospital
+      - hospital_name
+      - id
+      - license_number
+      - phone_number
+      - specialization
+      - updated_at
+      - user
+    HospitalDoctorProfileRequest:
+      type: object
+      description: Serializer for HospitalDoctorProfile model.
+      properties:
+        hospital:
+          type: integer
+        cnic:
+          type: string
+          maxLength: 20
+        address:
+          type: string
+        license_number:
+          type: string
+          minLength: 1
+          maxLength: 100
+        specialization:
+          type: string
+          minLength: 1
+          maxLength: 255
+        phone_number:
+          type: string
+          minLength: 1
+          maxLength: 17
+        available_timings:
+          description: 'JSON object with day: [time_slots] mapping'
+        is_active:
+          type: boolean
+      required:
+      - hospital
+      - license_number
+      - phone_number
+      - specialization
+    HospitalRegistration:
+      type: object
+      description: |-
+        Serializer for hospital registration.
+        Creates both User and Hospital records.
+      properties:
+        username:
+          type: string
+          maxLength: 150
+        email:
+          type: string
+          format: email
+        first_name:
+          type: string
+          maxLength: 150
+        last_name:
+          type: string
+          maxLength: 150
+        phone_number:
+          type: string
+          maxLength: 17
+        hospital_name:
+          type: string
+          maxLength: 255
+        license_number:
+          type: string
+          maxLength: 100
+        hospital_email:
+          type: string
+          format: email
+        hospital_phone:
+          type: string
+          maxLength: 17
+        address:
+          type: string
+        location:
+          type: string
+        latitude:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,3}(?:\.\d{0,6})?$
+          nullable: true
+        longitude:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,3}(?:\.\d{0,6})?$
+          nullable: true
+      required:
+      - address
+      - email
+      - first_name
+      - hospital_email
+      - hospital_name
+      - hospital_phone
+      - last_name
+      - license_number
+      - location
+      - phone_number
+      - username
+    HospitalRegistrationRequest:
+      type: object
+      description: |-
+        Serializer for hospital registration.
+        Creates both User and Hospital records.
+      properties:
+        username:
+          type: string
+          minLength: 1
+          maxLength: 150
+        email:
+          type: string
+          format: email
+          minLength: 1
+        password:
+          type: string
+          writeOnly: true
+          minLength: 8
+        password_confirm:
+          type: string
+          writeOnly: true
+          minLength: 1
+        first_name:
+          type: string
+          minLength: 1
+          maxLength: 150
+        last_name:
+          type: string
+          minLength: 1
+          maxLength: 150
+        phone_number:
+          type: string
+          minLength: 1
+          maxLength: 17
+        hospital_name:
+          type: string
+          minLength: 1
+          maxLength: 255
+        license_number:
+          type: string
+          minLength: 1
+          maxLength: 100
+        hospital_email:
+          type: string
+          format: email
+          minLength: 1
+        hospital_phone:
+          type: string
+          minLength: 1
+          maxLength: 17
+        address:
+          type: string
+          minLength: 1
+        location:
+          type: string
+          minLength: 1
+        latitude:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,3}(?:\.\d{0,6})?$
+          nullable: true
+        longitude:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,3}(?:\.\d{0,6})?$
+          nullable: true
+      required:
+      - address
+      - email
+      - first_name
+      - hospital_email
+      - hospital_name
+      - hospital_phone
+      - last_name
+      - license_number
+      - location
+      - password
+      - password_confirm
+      - phone_number
+      - username
+    HospitalRequest:
+      type: object
+      description: Serializer for Hospital model.
+      properties:
+        user:
+          type: integer
+        name:
+          type: string
+          minLength: 1
+          maxLength: 255
+        license_number:
+          type: string
+          minLength: 1
+          maxLength: 100
+        email:
+          type: string
+          format: email
+          minLength: 1
+          maxLength: 254
+        phone:
+          type: string
+          minLength: 1
+          maxLength: 17
+        address:
+          type: string
+          minLength: 1
+        location:
+          type: string
+          minLength: 1
+          description: Detailed location/area description
+        latitude:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,3}(?:\.\d{0,6})?$
+          nullable: true
+        longitude:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,3}(?:\.\d{0,6})?$
+          nullable: true
+      required:
+      - address
+      - email
+      - license_number
+      - location
+      - name
+      - phone
+      - user
+    MedicineRecommendation:
+      type: object
+      description: Serializer for MedicineRecommendation model.
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        requested_by:
+          type: integer
+          readOnly: true
+        requested_by_username:
+          type: string
+          readOnly: true
+        medicine_name:
+          type: string
+          readOnly: true
+        patient_info:
+          readOnly: true
+          description: Patient age, allergies, comorbidities, etc.
+        alternatives:
+          readOnly: true
+          description: List of alternative medicines
+        warnings:
+          readOnly: true
+          description: List of warnings and contraindications
+        suggestion:
+          type: string
+          readOnly: true
+          description: General suggestion
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        response_time_ms:
+          type: integer
+          readOnly: true
+          nullable: true
+          description: LLM response time in milliseconds
+      required:
+      - alternatives
+      - created_at
+      - id
+      - medicine_name
+      - patient_info
+      - requested_by
+      - requested_by_username
+      - response_time_ms
+      - suggestion
+      - warnings
+    MedicineRecommendationRequestRequest:
+      type: object
+      description: Serializer for medicine recommendation request.
+      properties:
+        medicine_name:
+          type: string
+          minLength: 1
+          maxLength: 255
+        patient_info: {}
+      required:
+      - medicine_name
+    MedicineRecommendationResponse:
+      type: object
+      description: Serializer for medicine recommendation response.
+      properties:
+        id:
+          type: integer
+        medicine_name:
+          type: string
+        alternatives:
+          type: array
+          items:
+            type: object
+            additionalProperties: {}
+        warnings:
+          type: array
+          items:
+            type: object
+            additionalProperties: {}
+        suggestion:
+          type: string
+        response_time_ms:
+          type: integer
+        cached:
+          type: boolean
+          default: false
+        note:
+          type: string
+      required:
+      - alternatives
+      - id
+      - medicine_name
+      - response_time_ms
+      - suggestion
+      - warnings
+    NearbyHospital:
+      type: object
+      description: Serializer for nearby hospital search results.
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 255
+        email:
+          type: string
+          format: email
+          maxLength: 254
+        phone:
+          type: string
+          maxLength: 17
+        address:
+          type: string
+        location:
+          type: string
+          description: Detailed location/area description
+        latitude:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,3}(?:\.\d{0,6})?$
+          nullable: true
+        longitude:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,3}(?:\.\d{0,6})?$
+          nullable: true
+        distance_km:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+          readOnly: true
+      required:
+      - address
+      - distance_km
+      - email
+      - id
+      - location
+      - name
+      - phone
+    NearbyHospitalsResponse:
+      type: object
+      description: Response serializer for nearby hospitals search.
+      properties:
+        hospitals:
+          type: array
+          items:
+            $ref: '#/components/schemas/NearbyHospital'
+        count:
+          type: integer
+      required:
+      - count
+      - hospitals
+    OTPGenerateRequest:
+      type: object
+      description: Serializer for OTP generation request.
+      properties:
+        patient_phone:
+          type: string
+          minLength: 1
+          maxLength: 17
+        patient_id:
+          type: integer
+      required:
+      - patient_phone
+    OTPGenerateResponse:
+      type: object
+      description: Response serializer for OTP generation.
+      properties:
+        message:
+          type: string
+        expires_at:
+          type: string
+          format: date-time
+        phone_number:
+          type: string
+          description: Last 4 digits of phone number
+      required:
+      - expires_at
+      - message
+      - phone_number
+    OTPVerifyRequest:
+      type: object
+      description: Serializer for OTP verification.
+      properties:
+        patient_phone:
+          type: string
+          minLength: 1
+          maxLength: 17
+        otp:
+          type: string
+          minLength: 1
+          maxLength: 10
+      required:
+      - otp
+      - patient_phone
+    OTPVerifyResponse:
+      type: object
+      description: Response serializer for OTP verification.
+      properties:
+        message:
+          type: string
+        patient_id:
+          type: integer
+        verified:
+          type: boolean
+        access_granted_until:
+          type: string
+          format: date-time
+      required:
+      - access_granted_until
+      - message
+      - patient_id
+      - verified
+    PaginatedAppointmentList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Appointment'
+    PaginatedDepartmentList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Department'
+    PaginatedDoctorAppointmentList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/DoctorAppointment'
+    PaginatedHospitalDoctorProfileList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/HospitalDoctorProfile'
+    PaginatedHospitalList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Hospital'
+    PaginatedMedicineRecommendationList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/MedicineRecommendation'
+    PaginatedPatientReportList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/PatientReport'
+    PaginatedPrescriptionList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Prescription'
+    PaginatedUserList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/User'
+    PatchedDepartmentRequest:
+      type: object
+      description: Serializer for Department model.
+      properties:
+        hospital:
+          type: integer
+        name:
+          type: string
+          minLength: 1
+          maxLength: 255
+        description:
+          type: string
+    PatchedHospitalApprovalRequest:
+      type: object
+      description: Serializer for hospital approval action.
+      properties:
+        is_approved:
+          type: boolean
+    PatchedHospitalDoctorProfileRequest:
+      type: object
+      description: Serializer for HospitalDoctorProfile model.
+      properties:
+        hospital:
+          type: integer
+        cnic:
+          type: string
+          maxLength: 20
+        address:
+          type: string
+        license_number:
+          type: string
+          minLength: 1
+          maxLength: 100
+        specialization:
+          type: string
+          minLength: 1
+          maxLength: 255
+        phone_number:
+          type: string
+          minLength: 1
+          maxLength: 17
+        available_timings:
+          description: 'JSON object with day: [time_slots] mapping'
+        is_active:
+          type: boolean
+    PatchedHospitalRequest:
+      type: object
+      description: Serializer for Hospital model.
+      properties:
+        user:
+          type: integer
+        name:
+          type: string
+          minLength: 1
+          maxLength: 255
+        license_number:
+          type: string
+          minLength: 1
+          maxLength: 100
+        email:
+          type: string
+          format: email
+          minLength: 1
+          maxLength: 254
+        phone:
+          type: string
+          minLength: 1
+          maxLength: 17
+        address:
+          type: string
+          minLength: 1
+        location:
+          type: string
+          minLength: 1
+          description: Detailed location/area description
+        latitude:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,3}(?:\.\d{0,6})?$
+          nullable: true
+        longitude:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,3}(?:\.\d{0,6})?$
+          nullable: true
+    PatchedUpdateAppointmentStatusRequest:
+      type: object
+      description: Serializer for updating appointment status.
+      properties:
+        status:
+          $ref: '#/components/schemas/UpdateAppointmentStatusStatusEnum'
+        notes:
+          type: string
+    PatchedUserRequest:
+      type: object
+      description: Serializer for User model.
+      properties:
+        username:
+          type: string
+          minLength: 1
+          maxLength: 150
+        email:
+          type: string
+          format: email
+          maxLength: 255
+        first_name:
+          type: string
+          maxLength: 150
+        last_name:
+          type: string
+          maxLength: 150
+        phone_number:
+          type: string
+          pattern: ^\+?1?\d{9,15}$
+          maxLength: 17
+        is_active:
+          type: boolean
+    PatientMedicalSummary:
+      type: object
+      description: Response serializer for patient medical summary.
+      properties:
+        patient_id:
+          type: integer
+        patient_name:
+          type: string
+        total_prescriptions:
+          type: integer
+        total_reports:
+          type: integer
+        recent_prescriptions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Prescription'
+        recent_reports:
+          type: array
+          items:
+            $ref: '#/components/schemas/PatientReport'
+      required:
+      - patient_id
+      - patient_name
+      - recent_prescriptions
+      - recent_reports
+      - total_prescriptions
+      - total_reports
+    PatientRegistration:
+      type: object
+      description: Serializer for patient self-registration.
+      properties:
+        username:
+          type: string
+          maxLength: 150
+        email:
+          type: string
+          format: email
+          maxLength: 255
+        first_name:
+          type: string
+          maxLength: 150
+        last_name:
+          type: string
+          maxLength: 150
+        phone_number:
+          type: string
+          pattern: ^\+?1?\d{9,15}$
+          maxLength: 17
+      required:
+      - username
+    PatientRegistrationRequest:
+      type: object
+      description: Serializer for patient self-registration.
+      properties:
+        username:
+          type: string
+          minLength: 1
+          maxLength: 150
+        email:
+          type: string
+          format: email
+          maxLength: 255
+        password:
+          type: string
+          writeOnly: true
+          minLength: 1
+        password_confirm:
+          type: string
+          writeOnly: true
+          minLength: 1
+        first_name:
+          type: string
+          maxLength: 150
+        last_name:
+          type: string
+          maxLength: 150
+        phone_number:
+          type: string
+          pattern: ^\+?1?\d{9,15}$
+          maxLength: 17
+        consent:
+          type: boolean
+          writeOnly: true
+      required:
+      - consent
+      - password
+      - password_confirm
+      - username
+    PatientReport:
+      type: object
+      description: Serializer for PatientReport model.
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        patient:
+          type: integer
+        patient_name:
+          type: string
+          readOnly: true
+        hospital:
+          type: integer
+          nullable: true
+          description: Hospital where report was generated (if applicable)
+        hospital_name:
+          type: string
+          readOnly: true
+        uploaded_by:
+          type: integer
+          readOnly: true
+          nullable: true
+          description: User who uploaded the report
+        uploaded_by_name:
+          type: string
+          readOnly: true
+        file:
+          type: string
+          format: uri
+          pattern: (?:pdf|jpg|jpeg|png|doc|docx)$
+        file_url:
+          type: string
+          readOnly: true
+        file_type:
+          $ref: '#/components/schemas/FileTypeEnum'
+        file_size:
+          type: integer
+          readOnly: true
+          description: File size in bytes
+        file_extension:
+          type: string
+          readOnly: true
+        title:
+          type: string
+          description: Report title
+          maxLength: 255
+        description:
+          type: string
+          description: Report description
+        report_date:
+          type: string
+          format: date
+          nullable: true
+          description: Date of the medical report/test
+        uploaded_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - file
+      - file_extension
+      - file_size
+      - file_type
+      - file_url
+      - hospital_name
+      - id
+      - patient
+      - patient_name
+      - title
+      - updated_at
+      - uploaded_at
+      - uploaded_by
+      - uploaded_by_name
+    Prescription:
+      type: object
+      description: Serializer for Prescription model.
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        appointment:
+          type: integer
+          nullable: true
+          description: Related appointment if applicable
+        appointment_id:
+          type: integer
+          readOnly: true
+        doctor:
+          type: integer
+        doctor_name:
+          type: string
+          readOnly: true
+        doctor_specialization:
+          type: string
+          readOnly: true
+        hospital_name:
+          type: string
+          readOnly: true
+        patient:
+          type: integer
+        patient_name:
+          type: string
+          readOnly: true
+        diagnosis:
+          type: string
+          description: Diagnosis details
+        investigations:
+          type: string
+          description: Recommended investigations/tests
+        treatment_plan:
+          type: string
+          description: Treatment plan and recommendations
+        medicines:
+          description: List of medicines with dosage, frequency, duration
+        follow_up_date:
+          type: string
+          format: date
+          nullable: true
+          description: Recommended follow-up date
+        referral_notes:
+          type: string
+          description: Referral to specialist if needed
+        doctor_notes:
+          type: string
+          description: Additional notes from doctor
+        version:
+          type: integer
+          readOnly: true
+          description: Prescription version number
+        previous_version:
+          type: integer
+          readOnly: true
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - appointment_id
+      - created_at
+      - diagnosis
+      - doctor
+      - doctor_name
+      - doctor_specialization
+      - hospital_name
+      - id
+      - patient
+      - patient_name
+      - previous_version
+      - updated_at
+      - version
+    PrescriptionAttachment:
+      type: object
+      description: Serializer for PrescriptionAttachment model.
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        prescription:
+          type: integer
+        file:
+          type: string
+          format: uri
+          pattern: (?:pdf|jpg|jpeg|png|doc|docx)$
+        file_url:
+          type: string
+          readOnly: true
+        file_name:
+          type: string
+          readOnly: true
+        file_size:
+          type: integer
+          readOnly: true
+        description:
+          type: string
+        uploaded_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - file
+      - file_name
+      - file_size
+      - file_url
+      - id
+      - prescription
+      - uploaded_at
+    PrescriptionAttachmentRequest:
+      type: object
+      description: Serializer for PrescriptionAttachment model.
+      properties:
+        prescription:
+          type: integer
+        file:
+          type: string
+          format: binary
+          pattern: (?:pdf|jpg|jpeg|png|doc|docx)$
+        description:
+          type: string
+      required:
+      - file
+      - prescription
+    PrescriptionWithAttachments:
+      type: object
+      description: Prescription serializer with attachments.
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        appointment:
+          type: integer
+          nullable: true
+          description: Related appointment if applicable
+        appointment_id:
+          type: integer
+          readOnly: true
+        doctor:
+          type: integer
+        doctor_name:
+          type: string
+          readOnly: true
+        doctor_specialization:
+          type: string
+          readOnly: true
+        hospital_name:
+          type: string
+          readOnly: true
+        patient:
+          type: integer
+        patient_name:
+          type: string
+          readOnly: true
+        diagnosis:
+          type: string
+          description: Diagnosis details
+        investigations:
+          type: string
+          description: Recommended investigations/tests
+        treatment_plan:
+          type: string
+          description: Treatment plan and recommendations
+        medicines:
+          description: List of medicines with dosage, frequency, duration
+        follow_up_date:
+          type: string
+          format: date
+          nullable: true
+          description: Recommended follow-up date
+        referral_notes:
+          type: string
+          description: Referral to specialist if needed
+        doctor_notes:
+          type: string
+          description: Additional notes from doctor
+        version:
+          type: integer
+          readOnly: true
+          description: Prescription version number
+        previous_version:
+          type: integer
+          readOnly: true
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        attachments:
+          type: array
+          items:
+            $ref: '#/components/schemas/PrescriptionAttachment'
+          readOnly: true
+      required:
+      - appointment_id
+      - attachments
+      - created_at
+      - diagnosis
+      - doctor
+      - doctor_name
+      - doctor_specialization
+      - hospital_name
+      - id
+      - patient
+      - patient_name
+      - previous_version
+      - updated_at
+      - version
+    RecommendationStats:
+      type: object
+      description: Response serializer for recommendation statistics.
+      properties:
+        total_recommendations:
+          type: integer
+        unique_medicines:
+          type: integer
+        unique_users:
+          type: integer
+        avg_response_time_ms:
+          type: number
+          format: double
+        top_medicines:
+          type: array
+          items:
+            type: object
+            additionalProperties: {}
+      required:
+      - avg_response_time_ms
+      - top_medicines
+      - total_recommendations
+      - unique_medicines
+      - unique_users
+    StatusA66Enum:
+      enum:
+      - REQUESTED
+      - CONFIRMED
+      - CANCELLED
+      - COMPLETED
+      type: string
+      description: |-
+        * `REQUESTED` - Requested
+        * `CONFIRMED` - Confirmed
+        * `CANCELLED` - Cancelled
+        * `COMPLETED` - Completed
+    TokenObtainPair:
+      type: object
+      properties:
+        access:
+          type: string
+          readOnly: true
+        refresh:
+          type: string
+          readOnly: true
+      required:
+      - access
+      - refresh
+    TokenObtainPairRequest:
+      type: object
+      properties:
+        username:
+          type: string
+          writeOnly: true
+          minLength: 1
+        password:
+          type: string
+          writeOnly: true
+          minLength: 1
+      required:
+      - password
+      - username
+    TokenRefresh:
+      type: object
+      properties:
+        access:
+          type: string
+          readOnly: true
+        refresh:
+          type: string
+      required:
+      - access
+      - refresh
+    TokenRefreshRequest:
+      type: object
+      properties:
+        refresh:
+          type: string
+          minLength: 1
+      required:
+      - refresh
+    UpdateAppointmentStatusStatusEnum:
+      enum:
+      - CONFIRMED
+      - CANCELLED
+      - COMPLETED
+      type: string
+      description: |-
+        * `CONFIRMED` - CONFIRMED
+        * `CANCELLED` - CANCELLED
+        * `COMPLETED` - COMPLETED
+    UploadPatientReport:
+      type: object
+      description: Serializer for uploading patient reports.
+      properties:
+        file:
+          type: string
+          format: uri
+          pattern: (?:pdf|jpg|jpeg|png|doc|docx)$
+        file_type:
+          $ref: '#/components/schemas/FileTypeEnum'
+        title:
+          type: string
+          description: Report title
+          maxLength: 255
+        description:
+          type: string
+          description: Report description
+        report_date:
+          type: string
+          format: date
+          nullable: true
+          description: Date of the medical report/test
+        hospital:
+          type: integer
+          nullable: true
+          description: Hospital where report was generated (if applicable)
+      required:
+      - file
+      - file_type
+      - title
+    UploadPatientReportRequest:
+      type: object
+      description: Serializer for uploading patient reports.
+      properties:
+        file:
+          type: string
+          format: binary
+          pattern: (?:pdf|jpg|jpeg|png|doc|docx)$
+        file_type:
+          $ref: '#/components/schemas/FileTypeEnum'
+        title:
+          type: string
+          minLength: 1
+          description: Report title
+          maxLength: 255
+        description:
+          type: string
+          description: Report description
+        report_date:
+          type: string
+          format: date
+          nullable: true
+          description: Date of the medical report/test
+        hospital:
+          type: integer
+          nullable: true
+          description: Hospital where report was generated (if applicable)
+      required:
+      - file
+      - file_type
+      - title
+    User:
+      type: object
+      description: Serializer for User model.
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        username:
+          type: string
+          maxLength: 150
+        email:
+          type: string
+          format: email
+          maxLength: 255
+        first_name:
+          type: string
+          maxLength: 150
+        last_name:
+          type: string
+          maxLength: 150
+        full_name:
+          type: string
+          readOnly: true
+        phone_number:
+          type: string
+          pattern: ^\+?1?\d{9,15}$
+          maxLength: 17
+        user_type:
+          allOf:
+          - $ref: '#/components/schemas/UserTypeEnum'
+          readOnly: true
+        is_active:
+          type: boolean
+        date_joined:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - date_joined
+      - full_name
+      - id
+      - user_type
+      - username
+    UserRequest:
+      type: object
+      description: Serializer for User model.
+      properties:
+        username:
+          type: string
+          minLength: 1
+          maxLength: 150
+        email:
+          type: string
+          format: email
+          maxLength: 255
+        first_name:
+          type: string
+          maxLength: 150
+        last_name:
+          type: string
+          maxLength: 150
+        phone_number:
+          type: string
+          pattern: ^\+?1?\d{9,15}$
+          maxLength: 17
+        is_active:
+          type: boolean
+      required:
+      - username
+    UserTypeEnum:
+      enum:
+      - ADMIN
+      - HOSPITAL
+      - DOCTOR
+      - PATIENT
+      type: string
+      description: |-
+        * `ADMIN` - Admin
+        * `HOSPITAL` - Hospital
+        * `DOCTOR` - Doctor
+        * `PATIENT` - Patient
+  securitySchemes:
+    jwtAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

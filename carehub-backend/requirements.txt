@@ -1,0 +1,42 @@
+# Core Django
+Django
+djangorestframework
+django-cors-headers
+
+# Database
+psycopg2-binary
+
+# Authentication
+djangorestframework-simplejwt
+PyJWT
+
+# Environment variables
+python-decouple
+
+# API Documentation
+drf-spectacular
+
+# File handling
+Pillow
+
+# Rate limiting
+django-ratelimit
+
+# Celery for async tasks
+celery
+redis
+
+# GROQ API client
+groq
+
+# Testing
+pytest
+pytest-django
+factory-boy
+
+# Utilities
+python-dateutil
+pytz
+
+# Geolocation
+geopy
